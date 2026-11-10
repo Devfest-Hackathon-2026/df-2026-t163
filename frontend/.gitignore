@@ -1,0 +1,4 @@
+tools/photos/*
+!tools/photos/README.md
+tools/candidates/
+tools/__pycache__/

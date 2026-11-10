@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>スタンプ一覧（確認用）</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; padding: 20px; background: #fbf6ec; color: #1d2340; font-family: "M PLUS Rounded 1c", sans-serif; }
+    h1 { font-size: 20px; margin: 0 0 4px; }
+    p { margin: 0 0 16px; font-size: 13px; color: #6b6f85; }
+    h2 { font-size: 16px; margin: 24px 0 10px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; }
+    .card { background: #fff; border: 2px solid #1d2340; border-radius: 14px; padding: 10px; text-align: center; }
+    .card.missing { border-style: dashed; opacity: .8; }
+    .big { width: 140px; height: 140px; margin: 0 auto; }
+    .small { width: 78px; height: 78px; margin: 6px auto 0; }
+    .big svg, .small svg { width: 100%; height: 100%; display: block; }
+    .label { font-size: 13px; font-weight: 800; margin-top: 6px; }
+    .tag { display: inline-block; font-size: 10px; font-weight: 800; padding: 1px 8px; border-radius: 999px; margin-top: 4px; }
+    .ok { background: #e6f7f5; color: #00806f; }
+    .ng { background: #fff1ee; color: #b52d1b; }
+  </style>
+</head>
+<body>
+  <h1>スタンプ一覧（確認用ページ）</h1>
+  <p>線画がある駅は絵入り、まだ無い駅はアイコンで表示しています。下の小さい方は台紙で使う 78px の大きさです。</p>
+  <div id="root"></div>
+  <script type="module">
+    import { LINES, paintColorFor } from "./js/data/lines.js";
+    import { stampSvg, hasStampArt } from "./js/stamp.js";
+
+    const root = document.getElementById("root");
+    for (const line of LINES) {
+      const done = line.stations.filter((s) => hasStampArt(s.id)).length;
+      const h = document.createElement("h2");
+      h.textContent = `${line.name}（${line.section}）— 線画あり ${done} / ${line.stations.length} 駅`;
+      root.appendChild(h);
+      const grid = document.createElement("div");
+      grid.className = "grid";
+      for (const st of line.stations) {
+        const art = hasStampArt(st.id);
+        const color = paintColorFor(st.id);
+        const card = document.createElement("div");
+        card.className = `card${art ? "" : " missing"}`;
+        card.innerHTML = `
+          <div class="big">${stampSvg({ station: st, color, category: "station", date: Date.now() })}</div>
+          <div class="small">${stampSvg({ station: st, color, category: "station", date: Date.now() })}</div>
+          <div class="label">${st.name}（${st.id}）</div>
+          <span class="tag ${art ? "ok" : "ng"}">${art ? "線画あり" : "線画なし"}</span>`;
+        grid.appendChild(card);
+      }
+      root.appendChild(grid);
+    }
+  </script>
+</body>
+</html>

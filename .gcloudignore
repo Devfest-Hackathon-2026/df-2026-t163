@@ -1,0 +1,22 @@
+# gcloud run deploy --source . でアップロードしないもの（.env は絶対に含めない）
+.git
+.gitignore
+.gcloudignore
+.claude/
+README.md
+**/.env
+**/.env.*
+**/__pycache__/
+backend/.venv/
+backend/tests/
+backend/scripts/
+backend/sample2
+backend/Dockerfile
+backend/.dockerignore
+backend/README.md
+frontend/tools/
+frontend/Dockerfile
+frontend/nginx.conf
+frontend/stamp-preview.html
+frontend/.gitignore
+frontend/*.md
